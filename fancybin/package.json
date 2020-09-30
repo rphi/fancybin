@@ -1,0 +1,31 @@
+{
+  "name": "fancybin",
+  "version": "0.0.1",
+  "description": "A pastebin",
+  "main": "main.js",
+  "author": "rphipps@illuminate.solutions",
+  "license": "UNLICENCED",
+  "private": true,
+  "scripts": {
+    "clean": "rm static/dist/bundle.js",
+    "start": "parcel static/src/parcel.js",
+    "build-prod": "parcel build static/src/parcel.js"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.2",
+    "bootswatch": "^4.5.2",
+    "jquery": "^3.5.1",
+    "open-iconic": "^1.1.1",
+    "popper.js": "^1.16.1"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.1.2",
+    "sass": "^1.26.11"
+  },
+  "sass": {
+    "includePaths": [
+      "node_modules"
+    ]
+  }
+}
