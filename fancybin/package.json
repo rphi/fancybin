@@ -7,9 +7,9 @@
   "license": "UNLICENCED",
   "private": true,
   "scripts": {
-    "clean": "rm static/dist/bundle.js",
-    "start": "parcel static/src/parcel.js",
-    "build-prod": "parcel build static/src/parcel.js"
+    "clean": "rm -rf static/dist/*",
+    "start": "bash ./localdevstart.sh",
+    "build-prod": "bash ./yarn-build-prod.sh"
   },
   "dependencies": {
     "bootstrap": "^4.5.2",

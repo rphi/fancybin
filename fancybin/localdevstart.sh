@@ -55,12 +55,12 @@ fi
 echo ">>> Activating virtualenv"
 source ./localdevvenv.sh
 
-echo ">>> Setting environment variables"
-if [ ! -f ./envfile.sh ]; then
-    echo "Can't find envfile.sh, create this from the template first."
-    exit 1
-fi
-source ./envfile.sh
+# echo ">>> Setting environment variables"
+# if [ ! -f ./envfile.sh ]; then
+#     echo "Can't find envfile.sh, create this from the template first."
+#     exit 1
+# fi
+# source ./envfile.sh
 
 echo ">>> Running any pending Django migrations"
 python3 manage.py migrate
