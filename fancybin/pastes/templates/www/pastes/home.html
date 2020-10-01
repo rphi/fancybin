@@ -1,0 +1,75 @@
+{% extends 'www/_base.html' %}
+
+{% block content %}
+<div class="container-fluid" style="max-width: 1200px;" id="messages">
+  <div class="row justify-content-center">
+    <div class="col-xl-6">
+      
+      <div class="card mb-2 p-4" id="welcome_message">
+        <h4 class="text-center">Hi! This is a PasteBin clone.</h4>
+        <div class="btn-toolbar mt-3 mr-auto ml-auto">
+          <a type="button" class="btn btn-lg btn-success mr-3" href="{% url 'newpaste' %}"><span class="oi oi-plus"></span> New Paste</a>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col">
+
+      <div class="card mb-2" id="listPaste-card">
+        <div class="card-header">
+          <h3>Your pastes</h3>
+        </div>
+        {% if not user.is_authenticated %}
+        <div class="bg-light pt-3">
+          <div class="container">
+            <div class="text-center text-muted">
+              <h5>You're not logged in.</h5>
+              <p>Once you're logged in you can see all the pastes you've created here.</p>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Language</th>
+              <th scope="col">ID</th>
+              <th scope="col">Private</th>
+              <th scope="col" class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="listPaste-tbody">
+            {% if not pastes %}
+            <tr>
+              <td colspan="4" style="text-center">No pastes to show</td>
+            </tr>
+            {% else %}
+              {% for p in pastes %}
+                <tr>
+                  <td>{{p.title}}</td>
+                  <td>{{p.language}}</td>
+                  <td><code>{{p.id}}</code></td>
+                  <td>{% if private %}<span class="oi oi-eye"></span>{% else %}<span class="oi oi-circle-x"></span>{% endif %}</td>
+                  <td class="text-right">
+                    <div class="btn-group">
+                      <a href="{% url 'viewpaste' p.id %}" class="btn btn-primary">View</a>
+                      <a href="{% url 'editpaste' p.id %}" class="btn btn-warning">Edit</a>
+                      <a href="{% url 'deletepaste' p.id %}" class="btn btn-danger">Delete</a>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

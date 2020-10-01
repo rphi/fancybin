@@ -1,5 +1,150 @@
 {% extends 'www/_base.html' %}
 
+{% load static %}
+
 {% block content %}
+<div class="container-fluid" style="max-width: 1500px;">
+  <div class="card">
+    <form id="pasteform" method="POST" action="{% url 'savepaste' %}">
+      <div class="card-header">
+        {% if not editing %}
+          {% if paste.user == user %}
+            <a class="btn btn-primary btn-sm float-right" href="{% url 'editpaste' paste.id %}"><span class="oi oi-pencil mr-1"></span> Edit</a>
+          {% endif %}
+        {% endif %}
+        <h4>
+          {% if paste and editing %}
+            Editing: <input name="title" value="{{paste.title}}">
+          {% elif paste %}
+            {{paste.title}}
+          {% else %}
+            Create a new paste: <input name="title" placeholder="set a title">
+          {% endif %}
+        </h4>
+      </div>
+      {% csrf_token %}
+      <input type="hidden" name="id" id="pasteid" value="{{paste.id}}">
+      <input type="hidden" name="content" id="paste" value="{{paste.content|escape|default:'pop your paste in here!'}}">
+      <div id="editor" style="width:100%;height:60vh;"></div>
+      <div class="card-footer">
+        <div id="pasteAlertContainer"></div>
+        
+        <div class="btn-toolbar mb-3">
+
+          <div class="input-group mr-3">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Language</div>
+            </div>
+            <input id="initiallanguage" type="hidden" value="{{paste.language|default:'plaintext'}}">
+            <select id="selectedlanguage" name="language" class="form-control"  {% if not editing %}disabled{% endif %}></select>
+          </div>
+
+
+          <div id="visibility" class="btn-group btn-group-toggle mr-3" data-toggle="buttons">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Visibility</div>
+            </div>
+            <label class="btn btn-outline-primary active">
+              <input type="radio" name="visibility" value="private" autocomplete="off" {% if paste.private %}checked{% endif %} {% if not editing %}disabled{% endif %}> Private
+            </label>
+            <label class="btn btn-outline-warning">
+              <input type="radio" name="visibility" value="public" autocomplete="off" {% if not paste.private %}checked{% endif %} {% if not editing %}disabled{% endif %}> Public
+            </label>
+          </div>
+
+          <div class="input-group" {% if not paste %}style="display: none;"{% endif %}>
+            <div class="input-group-prepend">
+              <div class="input-group-text" id="btnGroupAddon">Permalink</div>
+            </div>
+            <input type="text" id="permalink" class="form-control" readonly>
+            <div class="input-group-append">
+              <button type="button" class="btn btn-outline-secondary" id="btnGroupAddon" onclick="copyPermalink()"><span class="oi oi-clipboard"></span></button>
+            </div>
+          </div>
+
+        </div>
+        
+        <input id="editing" type="hidden" value="{{editing|yesno:'true,false'}}">
+        
+        {% if editing %}
+        <div>
+          <button type="button" class="btn btn-lg btn-success" onclick="savePaste()">Save</button>
+          {% if paste %}
+          <a href="{% url 'deletepaste' paste.id %}" class="btn btn-lg btn-danger">Delete</a>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if paste %}
+        <p>Creator: {{paste.user}}, Created: {{paste.timestamp}}, Updated: {{paste.updated}}</p>
+        {% endif %}
+
+      </div>
+    </form>
+  </div>
+  
+</div>
+
+{% endblock %}
+
+{% block pagescripts %}
+
+<script>
+var editor;
+
+function updateLanguage() {
+  let newlang = $('#selectedlanguage option:selected').val();
+  console.log(`Language set to: ${newlang}`);
+  monaco.editor.setModelLanguage(editor.getModel(), newlang);
+}
+
+function setupLanguages() {
+  let langs = monaco.languages.getLanguages();
+  let select = $('#selectedlanguage');
+  for (var l of langs) {
+    select.append(`<option value="${l.id}">${l.aliases[0]}</option>`);
+  }
+
+  $('#selectedlanguage').change(updateLanguage)
+}
+
+function setLanguage(lang) {
+  $(`#selectedlanguage [value="${lang}"]`).attr('selected', 'selected').change();
+}
+
+function setPermalink() {
+  $('#permalink').val(window.location.href);
+}
+
+function savePaste() {
+  $('#paste').val(editor.getValue());
+  $('#pasteform').submit();
+}
+
+function copyPermalink() {
+  var link = $('#permalink');
+  link.select();
+  document.execCommand('copy');
+}
+
+$(document).ready(() => {
+  let editing = $('#editing').val() == 'true';
+  let value = $('#paste').val();
+  let initiallanguage = $('#initiallanguage').val();
+
+  editor = monaco.editor.create(document.getElementById('editor'), {
+    value: value,
+    theme: 'vs',
+    readOnly: !editing,
+  });
+
+  setupLanguages();
+  
+  setLanguage(initiallanguage);
+
+  setPermalink();
+})
+
+</script>
 
 {% endblock %}

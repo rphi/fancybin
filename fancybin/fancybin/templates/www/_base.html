@@ -2,12 +2,13 @@
 {% load static %}
 {% load version %}
 {% load tracking %}
+{% load notices %}
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FancyBin</title>
 
     <link rel="stylesheet" href="{% static 'fancybin.css' %}">
@@ -19,32 +20,49 @@
   <body>
     <div class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
         <div class="container">
-            <a class="navbar-brand" href="/"><span class="oi oi-box"></span> FancyBin</a>
-            <ul class="navbar-nav">
-                {% if user.is_staff %}<a class="nav-link" href="/admin">Admin</a>{% endif %}
-            </ul>
-            <div>
-                {% if user.is_impersonate %}
-                <a class="btn btn-outline-warning mr-1" href="/impersonate/stop/">Impersonating</button>
-                {% endif %}
-                {% if user.is_authenticated %}
-                <a class="btn btn-secondary" href="/account/logout">Logout, {{ user.get_full_name }}?</a>
-                {% else %}
-                <a class="btn btn-secondary" href="/account/login">Log in</a>
-                {% endif %}
-            </div>
+          <div>
+            <a class="navbar-brand" href="{% url 'home' %}"><span class="oi oi-box"></span> FancyBin</a>
+            <a href="{% url 'newpaste' %}" class="btn btn-sm btn-success" style="margin-top: -10px;"><span class="oi oi-plus"></span> New</a>
+          </div>
+          
+          <ul class="navbar-nav">
+            {% if user.is_staff %}
+            <li class="nav-item">
+              <a class="nav-link" href="/admin">Admin</a>
+            </li>
+            {% endif %}
+          </ul>
+          <div>
+              {% if user.is_impersonate %}
+              <a class="btn btn-outline-warning mr-1" href="/impersonate/stop/">Impersonating</button>
+              {% endif %}
+              {% if user.is_authenticated %}
+              <a class="btn btn-secondary" href="/account/logout">Logout, {{ user.get_full_name }}?</a>
+              {% else %}
+              <a class="btn btn-secondary" href="/account/login">Log in</a>
+              {% endif %}
+          </div>
             
         </div>
     </div>
 
-    <main role="main">
+    {% notices %}
+
+    <div role="main">
+      <div class="container">
+        {% bootstrap_messages %}
+      </div>
+      
       {% block content %}
       {% endblock %}
-    </main>
+    </div>
 
     <footer class="m-3">
       <div class="container text-center text-muted">
         FancyBin - v: {% APP_VERSION %}
+      </div>
+      <div class="container text-center text-muted">
+        Editor powered by <a href="https://github.com/microsoft/monaco-editor/" target="_blank">Microsoft Monaco</a>
       </div>
     </footer>
   </div>

@@ -1,7 +1,10 @@
 // JavaScript resources
 //import './js/index';
-import 'bootstrap'
+var jquery = require("jquery");
+window.$ = window.jQuery = jquery;
+import 'bootstrap';
+import './js/monaco';
 
 // CSS/SASS resources
-import './scss/index.scss';
-//import 'open-iconic/font/css/open-iconic-bootstrap';
+import './scss/fancybin.scss';
+import 'open-iconic/font/css/open-iconic-bootstrap';

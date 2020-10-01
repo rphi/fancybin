@@ -1,0 +1,23 @@
+{% if notices %}
+<div class="bg-light pt-3" style="margin-top: -1rem;">
+    <div class="container">
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <h4>System messages:</h4>
+            </div>
+            <div class="col">
+                
+                {% for n in notices %}
+                    <div class="alert alert-{{n.style}}">
+                        <h5>{{n.title}}</h5>
+                        <p>{{n.message | safe}}</p>
+                        <span class="badge badge-dark small float-right">Sent by {{n.user | default:"system"}} to {{n.target | default:"everyone"}} at {{n.timestamp}}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endif %}

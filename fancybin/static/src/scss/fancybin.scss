@@ -1,0 +1,13 @@
+//@import "bootswatch/dist/darkly/variables";
+@import "bootstrap/scss/bootstrap";
+//@import "bootswatch/dist/darkly/bootswatch";
+
+.spinner {
+  animation: spin 2s infinite linear;
+}
+
+body {
+  background-image: url(../img/dust_scratches.png);
+  background-repeat: repeat;
+  background-size: initial;
+}

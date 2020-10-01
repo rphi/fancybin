@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.urls import path
 from django.views.generic import TemplateView
+from pastes.views import home, newPaste, viewPaste, editPaste, savePaste, deletePaste
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='www/pastes/paste.html')),
+    path('', home, name="home"),
+    path('paste/new', newPaste, name="newpaste"),
+    path('paste/view/<id>', viewPaste, name="viewpaste"),
+    path('paste/edit/<id>', editPaste, name="editpaste"),
+    path('paste/save/', savePaste, name="savepaste"),
+    path('paste/delete/<id>', deletePaste, name="deletepaste"),
 ]
